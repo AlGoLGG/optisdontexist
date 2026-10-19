@@ -1,0 +1,26 @@
+name: Build DLL
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Add MSBuild to PATH
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Navigate to Workspace and Build
+      run: |
+        msbuild /p:Configuration=Release /p:Platform=x86
+        
+    - name: Upload Compiled DLL
+      uses: actions/upload-artifact@v4
+      with:
+        name: optis-dll
+        path: "**/Release/*.dll"
